@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)file:///Users/homokipeter/Downloads/szerviz_munkalap_3.html -->
+<html lang="hu"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playstationszerviz.hu – Munkalap rendszer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --border2: #ccc9be;
+    --text: #1a1a18;
+    --muted: #6b6960;
+    --hint: #9e9b92;
+    --accent: #1a1a18;
+    --blue-bg: #e8f0fe;
+    --blue-text: #1a56db;
+    --green-bg: #e3f5e8;
+    --green-text: #166534;
+    --amber-bg: #fef3c7;
+    --amber-text: #92400e;
+    --red-bg: #fee2e2;
+    --red-text: #991b1b;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .logo {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  .logo span { color: var(--muted); font-weight: 400; }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+  }
+
+  .tab {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s;
+    font-weight: 500;
+  }
+
+  .tab.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Form */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+
+  .form-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field { margin-bottom: 1rem; }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.15s, background 0.15s;
+    outline: none;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--border2);
+    background: var(--surface);
+  }
+
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .required { color: #dc2626; }
+
+  .btn-save {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 13px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  .btn-save:hover { opacity: 0.85; }
+  .btn-save:active { transform: scale(0.99); }
+  .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .filter-bar input,
+  .filter-bar select {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+
+  .card:hover { border-color: var(--border2); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .card-name {
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .card-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--hint);
+    margin-left: 6px;
+  }
+
+  .card-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .card-issue {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .badge-open { background: var(--blue-bg); color: var(--blue-text); }
+  .badge-done { background: var(--green-bg); color: var(--green-text); }
+  .badge-warranty { background: var(--amber-bg); color: var(--amber-text); }
+
+  .btn {
+    padding: 7px 14px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    font-weight: 500;
+  }
+
+  .btn:hover { background: var(--bg); border-color: var(--border2); }
+  .btn-danger { color: var(--red-text); border-color: #fca5a5; }
+  .btn-danger:hover { background: var(--red-bg); }
+  .btn-success { color: var(--green-text); border-color: #86efac; }
+  .btn-success:hover { background: var(--green-bg); }
+
+  .empty {
+    text-align: center;
+    color: var(--hint);
+    padding: 3rem 1rem;
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-bg.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-title { font-size: 16px; font-weight: 600; }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 1;
+    padding: 2px 6px;
+  }
+
+  .detail-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+  .detail-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .detail-table td:first-child {
+    color: var(--muted);
+    width: 38%;
+    font-size: 13px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.25s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .toast.show { opacity: 1; }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    color: var(--hint);
+    padding: 2.5rem;
+    font-size: 14px;
+  }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    header, .tabs, .card-actions, .btn, .modal-bg { display: none !important; }
+  }
+
+  @media (max-width: 480px) {
+    .row2 { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .stat-num { font-size: 20px; }
+    .header-inner { gap: 8px; }
+    .tab { padding: 8px 10px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen" style="position: fixed; inset: 0px; background: rgb(245, 244, 240); display: none; align-items: center; justify-content: center; z-index: 9999;">
+  <div style="background:#fff;border:1px solid #e2e0d8;border-radius:14px;padding:2rem;width:300px;text-align:center">
+    <div style="font-size:16px;font-weight:600;margin-bottom:4px">Playstationszerviz.hu</div>
+    <div style="font-size:13px;color:#6b6960;margin-bottom:1.5rem">Szerviz rendszer</div>
+    <input id="pw-input" type="password" placeholder="Jelszó" style="width:100%;padding:10px 12px;border:1px solid #e2e0d8;border-radius:10px;font-size:15px;margin-bottom:10px;text-align:center" onkeydown="if(event.key===&#39;Enter&#39;)checkPw()">
+    <button onclick="checkPw()" style="width:100%;padding:11px;background:#1a1a18;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer">Belépés</button>
+    <div id="pw-error" style="color:#dc2626;font-size:13px;margin-top:8px;display:none">Hibás jelszó</div>
+  </div>
+</div>
+
+<script>
+function checkPw() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === 'S1r9e7i8') {
+    document.getElementById('login-screen').style.display = 'none';
+    sessionStorage.setItem('auth', '1');
+  } else {
+    document.getElementById('pw-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+if (sessionStorage.getItem('auth') === '1') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('login-screen').style.display = 'none';
+  });
+}
+</script>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Playstationszerviz.hu <span>/ xboxszerviz.hu</span></div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab(&#39;new&#39;)">+ Új</button>
+      <button class="tab" onclick="showTab(&#39;list&#39;)">Munkalapok</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- ÚJ MUNKALAP -->
+  <div id="sec-new" class="section active">
+    <div class="form-card">
+      <div class="form-title">Új szerviz munkalap</div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Ügyfél neve <span class="required">*</span></label>
+          <input id="f-name" type="text" placeholder="Kovács István">
+        </div>
+        <div class="field">
+          <label>Telefon <span class="required">*</span></label>
+          <input id="f-phone" type="tel" placeholder="+36 70 410 2004">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Cím</label>
+        <input id="f-address" type="text" placeholder="2120 Dunakeszi, Katona József u. 7/a">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Eszköz típusa <span class="required">*</span></label>
+          <select id="f-device" onchange="toggleCustomDevice()">
+            <option value="">— válassz —</option>
+            <option>PlayStation 4</option>
+            <option>PlayStation 4 Pro</option>
+            <option>PlayStation 5</option>
+            <option>PlayStation 5 Slim</option>
+            <option>Xbox One</option>
+            <option>Xbox One S</option>
+            <option>Xbox One X</option>
+            <option>Xbox Series S</option>
+            <option>Xbox Series X</option>
+            <option>Kontroller (PS)</option>
+            <option>Kontroller (Xbox)</option>
+            <option value="egyeb">Egyéb (saját szöveg)</option>
+          </select>
+          <input id="f-device-custom" type="text" placeholder="Eszköz megnevezése..." style="display:none;margin-top:6px">
+        </div>
+        <div class="field">
+          <label>Garancia</label>
+          <select id="f-warranty">
+            <option value="nem">Nem garanciális</option>
+            <option value="igen">Garanciális</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Hiba leírása <span class="required">*</span></label>
+        <textarea id="f-issue" placeholder="Pl. nem kapcsol be, HDMI nem ad képet, kontroller drift..."></textarea>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Vállalt határidő</label>
+          <input id="f-deadline" type="date">
+        </div>
+        <div class="field">
+          <label>Becsült összeg (Ft)</label>
+          <input id="f-amount" type="number" placeholder="15000">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Átvevő neve</label>
+          <input id="f-receiver" type="text" value="Homoki Péter">
+        </div>
+        <div class="field">
+          <label>Sorozatszám / IMEI</label>
+          <input id="f-serial" type="text" placeholder="opcionális">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Megjegyzés</label>
+        <textarea id="f-note" placeholder="Belső megjegyzés..." style="min-height:60px"></textarea>
+      </div>
+
+      <button class="btn-save" id="save-btn" onclick="saveSheet()">Mentés Google Sheets-be</button>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="sec-list" class="section">
+    <div class="stats" id="stats">
+      <div class="stat"><div class="stat-num">—</div><div class="stat-label">Összes</div></div>
+      <div class="stat"><div class="stat-num">—</div><div class="stat-label">Nyitott</div></div>
+      <div class="stat"><div class="stat-num">—</div><div class="stat-label">Bevétel</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="search" placeholder="Keresés névre, telefonra..." oninput="renderList()">
+      <select id="filter-status" onchange="renderList()">
+        <option value="">Minden</option>
+        <option value="nyitott">Nyitott</option>
+        <option value="kész">Kész</option>
+      </select>
+    </div>
+
+    <div id="list-container"><div class="loading">Betöltés...</div></div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Munkalap</span>
+      <button class="close-btn" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbyCZl2af0jxjLnMscM0DSQiTWj5pkmrh1-NB0ZDLzLsq7GqDgPblWokPbCKb2Liw4S-/exec';
+let sheets = [];
+
+function toggleCustomDevice() {
+  const sel = document.getElementById('f-device').value;
+  const custom = document.getElementById('f-device-custom');
+  custom.style.display = sel === 'egyeb' ? 'block' : 'none';
+  if (sel === 'egyeb') custom.focus();
+}
+
+function nextId() {
+  const now = new Date();
+  const stamp = now.getFullYear().toString().slice(-2) +
+    String(now.getMonth()+1).padStart(2,'0') +
+    String(now.getDate()).padStart(2,'0') + '-' +
+    String(now.getHours()).padStart(2,'0') +
+    String(now.getMinutes()).padStart(2,'0') +
+    String(now.getSeconds()).padStart(2,'0');
+  return 'SZ-' + stamp;
+}
+
+async function saveSheet() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const deviceSel = document.getElementById('f-device').value;
+  const device = deviceSel === 'egyeb' ? document.getElementById('f-device-custom').value.trim() : deviceSel;
+  const issue = document.getElementById('f-issue').value.trim();
+  if (!name||!phone||!device||!issue) { showToast('Töltsd ki a kötelező mezőket!'); return; }
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Mentés folyamatban...';
+
+  const sheet = {
+    action: 'save',
+    id: nextId(),
+    date: new Date().toISOString(),
+    name, phone,
+    address: document.getElementById('f-address').value.trim(),
+    device,
+    warranty: document.getElementById('f-warranty').value,
+    issue,
+    deadline: document.getElementById('f-deadline').value,
+    amount: document.getElementById('f-amount').value,
+    receiver: document.getElementById('f-receiver').value.trim(),
+    note: document.getElementById('f-note').value.trim(),
+    status: 'nyitott'
+  };
+
+  try {
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(sheet)
+    });
+    sheets.unshift(sheet);
+    showToast('✓ Mentve: ' + sheet.id);
+    clearForm();
+    showTab('list');
+  } catch(e) {
+    showToast('Hiba: ' + e.message);
+  }
+  btn.disabled = false;
+  btn.textContent = 'Mentés Google Sheets-be';
+}
+
+async function loadSheets() {
+  document.getElementById('list-container').innerHTML = '<div class="loading">Betöltés...</div>';
+  try {
+    const res = await fetch(WEBHOOK + '?t=' + Date.now());
+    const json = await res.json();
+    const rows = json.rows || [];
+    sheets = rows.filter(r => r[0] && r[0] !== 'id' && r[12] !== 'archivált').map(r => ({
+      id: r[0], date: r[1], name: r[2], phone: r[3], address: r[4],
+      device: r[5], warranty: r[6], issue: r[7], deadline: r[8],
+      amount: r[9], receiver: r[10], note: r[11], status: r[12]
+    }));
+    renderList();
+    renderStats();
+  } catch(e) {
+    document.getElementById('list-container').innerHTML = '<div class="empty">Nem sikerült betölteni. Ellenőrizd az internetkapcsolatot.</div>';
+  }
+}
+
+function renderStats() {
+  const open = sheets.filter(x => x.status === 'nyitott').length;
+  const income = sheets.filter(x => x.status === 'kész' && x.amount).reduce((a,x) => a + parseInt(x.amount||0), 0);
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-num">${sheets.length}</div><div class="stat-label">Összes</div></div>
+    <div class="stat"><div class="stat-num">${open}</div><div class="stat-label">Nyitott</div></div>
+    <div class="stat"><div class="stat-num">${income.toLocaleString('hu')}</div><div class="stat-label">Bevétel Ft</div></div>
+  `;
+}
+
+function renderList() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const st = document.getElementById('filter-status').value;
+  const filtered = sheets.filter(x => {
+    const match = !q || (x.name+x.phone+x.device+x.id).toLowerCase().includes(q);
+    return match && (!st || x.status === st);
+  });
+  const el = document.getElementById('list-container');
+  if (!filtered.length) { el.innerHTML = '<div class="empty">Nincs találat</div>'; return; }
+  el.innerHTML = filtered.map(x => {
+    const d = new Date(x.date);
+    const dateStr = isNaN(d) ? x.date : d.toLocaleDateString('hu-HU');
+    const badge = x.warranty==='igen'
+      ? '<span class="badge badge-warranty">Garancia</span>'
+      : x.status==='kész'
+        ? '<span class="badge badge-done">Kész</span>'
+        : '<span class="badge badge-open">Nyitott</span>';
+    return `<div class="card">
+      <div class="card-top">
+        <div>
+          <div class="card-name">${x.name}<span class="card-id">${x.id}</span></div>
+          <div class="card-sub">${x.device} · ${x.phone} · ${dateStr}</div>
+        </div>
+        ${badge}
+      </div>
+      <div class="card-issue">${(x.issue||'').substring(0,80)}${(x.issue||'').length>80?'…':''}</div>
+      <div class="card-actions">
+        <button class="btn" onclick="viewSheet('${x.id}')">Részletek</button>
+        ${x.status==='nyitott'?`<button class="btn btn-success" onclick="markDone('${x.id}')">Kész ✓</button>`:''}
+        <button class="btn" onclick="doPrint(sheets.find(s=>s.id==='${x.id}'))">Nyomtat</button>
+        <button class="btn btn-danger" onclick="deleteSheet('${x.id}')">Töröl</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewSheet(id) {
+  const x = sheets.find(s => s.id === id);
+  if (!x) { showToast('Nem található'); return; }
+  const date = new Date(x.date);
+  const dateStr = isNaN(date) ? x.date : date.toLocaleString('hu-HU');
+  document.getElementById('modal-title').textContent = x.id + ' – ' + x.name;
+  document.getElementById('modal-body').innerHTML = `
+    <table class="detail-table">
+      ${dr('Dátum', dateStr)}
+      ${dr('Ügyfél', x.name)}
+      ${dr('Telefon', `<a href="tel:${x.phone}" style="color:var(--blue-text)">${x.phone}</a>`)}
+      ${dr('Cím', x.address||'—')}
+      ${dr('Eszköz', x.device)}
+      ${dr('Garancia', x.warranty==='igen'?'Igen':'Nem')}
+      ${dr('Hiba leírása', x.issue)}
+      ${dr('Határidő', x.deadline||'—')}
+      ${dr('Összeg', x.amount ? parseInt(x.amount).toLocaleString('hu')+' Ft' : '—')}
+      ${dr('Átvevő', x.receiver||'—')}
+      ${dr('Megjegyzés', x.note||'—')}
+      ${dr('Állapot', x.status)}
+    </table>
+    <div class="modal-actions">
+      ${x.status==='nyitott'?`<button class="btn btn-success" onclick="markDone('${x.id}');closeModal()">Kész ✓</button>`:''}
+      <button class="btn" onclick="printSheet('${x.id}')">Nyomtat</button>
+      <button class="btn btn-danger" onclick="deleteSheet('${x.id}');closeModal()">Töröl</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function dr(label, val) {
+  return `<tr><td>${label}</td><td>${val||'—'}</td></tr>`;
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+async function markDone(id) {
+  const i = sheets.findIndex(x => x.id === id);
+  if (i > -1) {
+    sheets[i].status = 'kész';
+    try {
+      await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({action:'update', id, status:'kész'})
+      });
+    } catch(e) {}
+    renderList(); renderStats();
+    showToast('Kész jelölve: ' + id);
+  }
+}
+
+async function deleteSheet(id) {
+  if (!confirm('Biztosan archiválod ezt a munkalapot? Elrejtjük a listából.')) return;
+  try {
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({action: 'update', id, status: 'archivált'})
+    });
+  } catch(e) {}
+  sheets = sheets.filter(x => x.id !== id);
+  renderList(); renderStats();
+  showToast('Archiválva: ' + id);
+}
+
+function printSheet(id) {
+  const x = sheets.find(s => s.id === id);
+  if (!x) { showToast('Nem található'); return; }
+  doPrint(x);
+}
+
+function doPrint(x) {
+  const date = new Date(x.date);
+  const dateStr = isNaN(date) ? x.date : date.toLocaleString('hu-HU');
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${x.id}</title>
+  <style>
+    body{font-family:Arial,sans-serif;font-size:13px;padding:24px;max-width:620px;color:#111}
+    .header{border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:4px}
+    h1{font-size:17px;margin:0 0 2px}
+    .sub{color:#555;font-size:12px}
+    table{width:100%;border-collapse:collapse;margin-top:16px}
+    td{padding:8px 6px;border-bottom:1px solid #e5e5e5;vertical-align:top}
+    td:first-child{color:#666;width:38%;font-size:12px;text-transform:uppercase;letter-spacing:0.3px}
+    .sig{margin-top:48px;display:flex;justify-content:space-between}
+    .sig-line{border-top:1px solid #333;width:200px;padding-top:6px;font-size:11px;text-align:center;color:#555}
+    .footer{margin-top:24px;border-top:1px solid #ddd;padding-top:10px;font-size:11px;color:#999;text-align:center}
+    .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
+    .open{background:#dbeafe;color:#1e40af}
+    .done{background:#dcfce7;color:#166534}
+    .warranty{background:#fef3c7;color:#92400e}
+    @media print{body{padding:0}}
+  </style></head><body>
+  <div class="header">
+    <h1>Playstationszerviz.hu &nbsp;·&nbsp; Xboxszerviz.hu</h1>
+    <div class="sub">Szerviz munkalap &nbsp;·&nbsp; ${x.id} &nbsp;·&nbsp; ${dateStr}</div>
+    <div class="sub">Tel: +36 30 222 6579 &nbsp;·&nbsp; 2120 Dunakeszi, Katona József u. 7/a</div>
+  </div>
+  <table>
+    <tr><td>Ügyfél neve</td><td><strong>${x.name}</strong></td></tr>
+    <tr><td>Telefon</td><td>${x.phone}</td></tr>
+    <tr><td>Cím</td><td>${x.address||'—'}</td></tr>
+    <tr><td>Eszköz típusa</td><td>${x.device}</td></tr>
+    <tr><td>Garancia</td><td>${x.warranty==='igen'?'<span class="badge warranty">Garanciális</span>':'Nem garanciális'}</td></tr>
+    <tr><td>Hiba leírása</td><td>${x.issue}</td></tr>
+    <tr><td>Vállalt határidő</td><td>${x.deadline||'—'}</td></tr>
+    <tr><td>Becsült összeg</td><td>${x.amount?parseInt(x.amount).toLocaleString('hu')+' Ft':'—'}</td></tr>
+    <tr><td>Átvevő</td><td>${x.receiver||'—'}</td></tr>
+    ${x.note?`<tr><td>Megjegyzés</td><td>${x.note}</td></tr>`:''}
+    <tr><td>Állapot</td><td><span class="badge ${x.status==='kész'?'done':'open'}">${x.status}</span></td></tr>
+  </table>
+  <div class="sig">
+    <div class="sig-line">Átvevő aláírása</div>
+    <div class="sig-line">Ügyfél aláírása</div>
+  </div>
+  <div class="footer">Playstationszerviz.hu – Xboxszerviz.hu &nbsp;·&nbsp; +36 30 222 6579 &nbsp;·&nbsp; Dunakeszi</div>
+  <script>window.onload=()=>window.print();<\/script>
+  </body></html>`);
+  w.document.close();
+}
+
+function clearForm() {
+  ['f-name','f-phone','f-address','f-issue','f-deadline','f-amount','f-note','f-serial'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-device').value = '';
+  document.getElementById('f-device-custom').value = '';
+  document.getElementById('f-device-custom').style.display = 'none';
+  document.getElementById('f-warranty').value = 'nem';
+  document.getElementById('f-receiver').value = 'Homoki Péter';
+  document.getElementById('f-deadline').valueAsDate = new Date(Date.now() + 7*86400000);
+}
+
+function showTab(t) {
+  document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', ['new','list'][i] === t));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+  if (t === 'list') loadSheets();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.getElementById('f-deadline').valueAsDate = new Date(Date.now() + 7*86400000);
+</script>
+
+
+</body></html>
